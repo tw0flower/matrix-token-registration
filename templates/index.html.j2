@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
+
+    <!doctype html>
+    <title>{{config['ServerName']}}'s registration</title>
+    <body class=bg-light>
+        <div class="container">
+            <main>
+                <div class="py-5 text-center">
+                    <img class="d-block mx-auto mb-4" src="{{ url_for('static', filename='matrix_logo.svg') }}" height=100>
+                    <h2>Register to Matrix with a token</h2>
+                    <p class=lead>If you've been provided with a token, you can register using this web page.</p>
+                    <p class=lead>A token is only valid for a limited number of new accounts. Make sure you have filled everything correctly as it may not be used a second time.</p>
+                </div>
+
+                <form class="needs-validation" method="POST">
+                    <div class="row g-5">
+                        <div class="col-12">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <label for="username" class="form-label">Username</label>
+                                    <div class="input-group has-validation">
+                                        <input name="username" type="text" class="form-control" id="username" placeholder="" value="" required>
+                                        <div class="invalid-feedback">
+                                            Your username is required.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="password" class="form-label">Password</label>
+                                    <div class="input-group has-validation">
+                                        <input name="password" type="password" class="form-control" id="password" placeholder="" value="" required>
+                                        <div class="invalid-feedback">
+                                            Your password is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label for="token" class="form-label">Token</label>
+                                    <div class="input-group has-validation">
+                                        <input name="token" type="text" class="form-control" id="token" placeholder="" value="" required>
+                                        <div class="invalid-feedback">
+                                            Your token is required.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button class="w-100 btn btn-primary btn-lg" type="submit">Register</button>
+                        </div>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </body>
+</html>

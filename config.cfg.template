@@ -1,0 +1,7 @@
+[Frontend]
+ServerName = MyServerName
+
+[Backend]
+SynapseURL = https://synapse.example.com/
+MatrixHost = matrix.example.com
+SynapseToken = myAdminAccountToken
