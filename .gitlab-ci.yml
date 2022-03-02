@@ -4,6 +4,9 @@ variables:
   CI_REGISTRY: docker.io
   CI_REGISTRY_IMAGE: index.docker.io/tw0flower/matrix-token-webapp
 
+stages:
+  - build
+
 docker-build:
   # Use the official docker image.
   image: docker:latest
