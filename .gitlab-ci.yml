@@ -3,6 +3,7 @@ variables:
   CI_REGISTRY_PASSWORD: $CI_REGISTRY_PASSWORD
   CI_REGISTRY: docker.io
   CI_REGISTRY_IMAGE: index.docker.io/tw0flower/matrix-token-webapp
+  STAGING_BRANCH: develop
 
 stages:
   - build
@@ -14,7 +15,10 @@ docker-build:
   services:
     - docker:dind
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - |
+      if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" || "$CI_COMMIT_BRANCH" == $STAGING_BRANCH ]]; then
+        docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+      fi
   # Default branch leaves tag empty (= latest tag)
   # All other branches are tagged with the escaped branch name (commit ref slug)
   script:
@@ -27,7 +31,10 @@ docker-build:
         echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
       fi
     - docker build --pull -t "$CI_REGISTRY_IMAGE${tag}" .
-    - docker push "$CI_REGISTRY_IMAGE${tag}"
+    - |
+      if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" || "$CI_COMMIT_BRANCH" == $STAGING_BRANCH ]]; then
+        docker push "$CI_REGISTRY_IMAGE${tag}"
+      fi
   # Run this job in a branch where a Dockerfile exists
   rules:
     - if: $CI_COMMIT_BRANCH
