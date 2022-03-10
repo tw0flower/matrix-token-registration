@@ -1,6 +1,6 @@
 from flask import Flask, request
 from markupsafe import escape
-from flask import render_template
+from flask import render_template, session, redirect, url_for
 from pathlib import Path
 import configparser
 
@@ -34,9 +34,11 @@ def index(name=None):
 
         # Check if token is valid
         if res.status_code == 200 and res_json["valid"] is not True:
-            return "The token you provided is not valid."
+            return redirect(
+                url_for("error", error_msg="The token you provided is not valid.")
+            )
         elif res.status_code != 200:
-            return "An unknown error has occured." + str(res.json())
+            return redirect(url_for("error", error_msg="An unknown error has occured."))
 
         # Check if username is available
         username = (
@@ -52,7 +54,7 @@ def index(name=None):
         res = requests.get(base_user_url)
 
         if res.status_code != 200:
-            return "Username taken or invalid" + base_user_url + str(res.json())
+            return redirect(url_for("error", error_msg="Username taken or invalid."))
 
         # Do the registration
         # Get the session ID
@@ -63,11 +65,7 @@ def index(name=None):
         res = requests.post(registration_base_url, json={})
 
         if res.status_code != 401:
-            return (
-                "An unknown error has occured during registration"
-                + str(registration_base_url)
-                + str(res.json())
-            )
+            return redirect(url_for("error", error_msg="An unknown error has occured."))
 
         session_id = res.json()["session"]
 
@@ -89,12 +87,7 @@ def index(name=None):
         res = requests.post(token_registration_url, json=json_payload)
 
         if res.status_code != 401:
-            return (
-                "An unknown error happened during registration, "
-                + token_registration_url
-                + str(res.status_code)
-                + str(res.json())
-            )
+            return redirect(url_for("error", error_msg="An unknown error has occured."))
 
         dummy_auth_url = urljoin(
             registration_base_url, "/_matrix/client/r0/auth/m.login.dummy/"
@@ -109,9 +102,21 @@ def index(name=None):
         res = requests.post(token_registration_url, json=json_payload)
 
         if res.status_code == 200:
-            return "Registration successful"
+            return redirect(url_for("success"), code=302)
         else:
-            return "An unknown error happened during registration, " + str(res.json())
+            return redirect(url_for("error", error_msg="An unknown error has occured."))
 
     else:
         return render_template("index.html.j2", config=config["Frontend"])
+
+
+@app.route("/success", methods=["GET"])
+def success():
+    return render_template("success.html.j2", config=config["Frontend"])
+
+
+@app.route("/error", methods=["GET"])
+def error():
+    return render_template(
+        "error.html.j2", config=config["Frontend"], error=request.args["error_msg"]
+    )
