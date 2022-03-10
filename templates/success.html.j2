@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
+
+    <!doctype html>
+    <title>{{config['ServerName']}}'s registration</title>
+    <body class=bg-light>
+        <div class="py-5 text-center">
+                    <img class="d-block mx-auto mb-4" src="{{ url_for('static', filename='matrix_logo.svg') }}" height=100>
+                    <h2>Register to Matrix with a token</h2>
+                    <div class="alert alert-success" role="alert">You've been successfully registered.</div>
+        </div>
+    </body>
+</html>
